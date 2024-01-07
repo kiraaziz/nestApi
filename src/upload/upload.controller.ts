@@ -5,7 +5,6 @@ import * as sharp from 'sharp'
 @Controller('upload')
 export class UploadController {
 
-
     @Post("/image")
     @UseInterceptors(FileInterceptor('image'))
     async uploadImage(@UploadedFile() file) {
