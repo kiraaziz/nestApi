@@ -1,16 +1,8 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
-import { TestController } from './test.controller';
-import { RootModule } from './root/root.module';
-import { LogMiddleware } from './root/log.middleware';
+import { Module } from '@nestjs/common';
+import { UserModule } from './user/user.module';
+import { UploadModule } from './upload/upload.module';
 
 @Module({
-  controllers: [TestController],
-  imports: [RootModule]
+    imports: [UserModule, UploadModule]
 })
-export class AppModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(LogMiddleware)
-      .forRoutes("/root/:id",  "/")
-  }
-}
+export class AppModule {}

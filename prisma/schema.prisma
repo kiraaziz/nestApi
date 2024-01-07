@@ -1,0 +1,66 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  uid       String   @unique @default(uuid())
+  password  String
+  name      String
+  email     String
+  provider  String
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
+  profile   Profile?
+  post      Post[]
+}
+
+model Profile {
+  id          String   @unique @default(uuid())
+  dispalyName String
+  photoURL    String
+  bio         String?
+  active      Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updateAt    DateTime @updatedAt
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [uid])
+}
+
+model Post {
+  id         String     @unique @default(uuid())
+  title      String
+  context    String
+  coverImage String
+  createdAt  DateTime   @default(now())
+  updateAt   DateTime   @updatedAt
+  autherId   String     @unique
+  auther     User       @relation(fields: [autherId], references: [uid])
+  PostTags   PostTags[]
+}
+
+model Tags {
+  id        String     @unique @default(uuid())
+  name      String
+  createdAt DateTime   @default(now())
+  updateAt  DateTime   @updatedAt
+  PostTags  PostTags[]
+}
+
+model PostTags {
+  postId    String
+  tagdId    String
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
+  tag       Tags     @relation(fields: [tagdId], references: [id])
+  Post      Post     @relation(fields: [postId], references: [id])
+
+  @@id([postId, tagdId])
+}
